@@ -3,7 +3,7 @@ package com.test.weatherapp.viewmodel
 import android.app.Application
 import android.location.Location
 import androidx.lifecycle.MutableLiveData
-import com.test.weatherapp.repository.api.WeatherDetails
+import com.test.weatherapp.repository.WeatherRepository
 import com.test.weatherapp.repository.entity.Weather
 
 /**
@@ -19,14 +19,14 @@ class DashboardViewModel : BaseViewModel {
         }
     }
 
+    // get Weather Data from Repository
     fun getWeather() {
-
         val location = Location("me")
         location.latitude = 35.0
         location.longitude = 135.0
 
-        WeatherDetails().getWeatherDetails(location, {
-            weatherDetails.postValue(it)
+        WeatherRepository().getWeatherDetails(location, {
+            weatherDetails.value = it
         }, {
             onError("Network Error")
         })

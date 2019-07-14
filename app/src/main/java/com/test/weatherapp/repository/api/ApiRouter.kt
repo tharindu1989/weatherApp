@@ -3,8 +3,11 @@ package com.test.weatherapp.repository.api
 import android.os.AsyncTask
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import com.test.weatherapp.config.AppConfig
 import com.test.weatherapp.enums.RequestType
+import com.test.weatherapp.extention.ViewTaskHandler
+import com.test.weatherapp.extention.runOnUI
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.lang.Exception
@@ -43,15 +46,13 @@ class ApiRouter {
                 httpConnection.useCaches = true
                 httpConnection.connectTimeout = 100000
                 httpConnection.readTimeout = 100000
+                var responseString = ""
+                try {
 
-                httpConnection.connect()
+                    httpConnection.connect()
 
-                var responseString: String = ""
-
-                when (httpConnection.responseCode) {
-                    HttpURLConnection.HTTP_OK -> { // 200
-
-                        try {
+                    when (httpConnection.responseCode) {
+                        HttpURLConnection.HTTP_OK -> { // 200
 
                             val bufferReader = BufferedReader(InputStreamReader(httpConnection.inputStream))
 
@@ -61,43 +62,30 @@ class ApiRouter {
                                 onSuccess.invoke(responseString)
                             }
 
-                        } catch (ex: Exception) {
-                            runOnUI {
+
+                        }
+                        else -> { // Other Status consider as a Error
+                            ViewTaskHandler.runOnUI {
                                 onError.invoke()
                             }
-                        } finally {
-                            httpConnection.disconnect()
-                        }
-
-
-                    }
-                    else -> { // Other Status consider as a Error
-                        runOnUI {
-                            onError.invoke()
                         }
                     }
+
+                } catch (ex: Exception) {
+                    ViewTaskHandler.runOnUI {
+                        onError.invoke()
+                    }
+                } finally {
+                    httpConnection.disconnect()
+                }
+
+            } ?: run {
+                ViewTaskHandler.runOnUI {
+                    onError.invoke()
                 }
             }
 
 
-        }
-    }
-
-    /**
-     * run on UI thread
-     */
-    fun runOnUI(task: () -> Unit) {
-        Runnable { task.invoke() }
-    }
-
-    class ViewTaskHandler(looper: Looper) : Handler(looper) {
-        companion object {
-        }
-    }
-
-    fun ViewTaskHandler.Companion.runOnUI(task: () -> Unit) {
-        ViewTaskHandler(Looper.getMainLooper()).post {
-            task.invoke()
         }
     }
 

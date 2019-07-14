@@ -14,7 +14,7 @@ import org.json.JSONObject
  * Created By Tharindu on 7/12/2019
  *
  */
-class WeatherDetails() {
+class WeatherDetails {
 
     /**
      * get Weather Forecast by Location
