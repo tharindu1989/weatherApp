@@ -25,8 +25,8 @@ class DashboardViewModel : BaseViewModel {
     // get Weather Data from Repository
     private fun getWeather() {
         val location = Location("me")
-        location.latitude = 35.0
-        location.longitude = 135.0
+        location.latitude = 1.359805 // Singapore
+        location.longitude = 103.878925 // Singapore
 
         WeatherRepository().getWeatherDetails(location, {
             weatherDetails.value = it
