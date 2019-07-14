@@ -5,19 +5,118 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".feature.BaseActivity">
+        tools:context=".feature.BaseActivity"
+>
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/weatherRv"
+    <ImageView
+            android:id="@+id/backgroundImg"
+            android:src="@drawable/bg_day"
+            android:scaleType="centerCrop"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
+            android:tint="@color/blue_70"/>
+
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            android:layout_marginEnd="8dp"
+            android:id="@+id/linearLayout"
+            android:layout_marginTop="50dp"
+            android:gravity="center_horizontal">
+
+        <TextView
+                android:id="@+id/cityTxt"
+                android:text="Singapore"
+                style="@style/MainTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+        />
+
+        <TextView
+                android:id="@+id/dateTxt"
+                style="@style/DateText"
+                android:text="Sun 14 July 2019"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:id="@+id/tempTxt"
+                style="@style/TemperatureText"
+                android:text="__"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <ScrollView android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintVertical_weight="1"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginBottom="30dp"
+                app:layout_constraintBottom_toBottomOf="@+id/backgroundImg">
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:orientation="vertical">
+            <TextView
+                    android:id="@+id/todayTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/H3White"/>
+
+            <View android:layout_width="match_parent"
+                  android:layout_height="0.5dp"
+                  android:background="@color/white"
+                  android:layout_marginTop="2dp"/>
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/todayRv"
+                    android:layout_width="match_parent"
+                    android:layout_height="110dp"/>
+            <View android:layout_width="match_parent"
+                  android:layout_height="0.5dp"
+                  android:background="@color/white"
+                  android:layout_marginTop="2dp"/>
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/weatherRv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintVertical_weight="1"/>
+
+            <View android:layout_width="match_parent"
+                  android:layout_height="0.5dp"
+                  android:background="@color/white"
+                  android:layout_marginTop="2dp"/>
+
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/item_background">
+
+                <TextView
+                        android:text="Today: Mostly Cloudy currently, It is 32 and high today was forecast as 32"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/H4White"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

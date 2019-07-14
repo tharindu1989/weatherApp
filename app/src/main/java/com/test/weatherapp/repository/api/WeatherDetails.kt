@@ -4,7 +4,9 @@ import android.location.Location
 import com.test.weatherapp.config.AppConfig
 import com.test.weatherapp.enums.RequestType
 import com.test.weatherapp.extention.toDate
+import com.test.weatherapp.extention.toTime
 import com.test.weatherapp.repository.entity.DailyWeather
+import com.test.weatherapp.repository.entity.ForeCastWeather
 import com.test.weatherapp.repository.entity.Weather
 import org.json.JSONArray
 import org.json.JSONException
@@ -25,8 +27,7 @@ class WeatherDetails {
         onSuccess: (weather: Weather) -> Unit,
         onError: () -> Unit
     ) {
-
-        val url = "forecast?lat=${location.latitude}&lon=${location.longitude}&APPID=${AppConfig.API_KEY}"
+        val url = "forecast?lat=${location.latitude}&lon=${location.longitude}&units=metric&APPID=${AppConfig.API_KEY}"
         ApiRouter().callApi(url, RequestType.GET, null, {
 
             try {
@@ -35,25 +36,32 @@ class WeatherDetails {
                 val cod = jsonObj.getInt("cod")
                 val cnt = jsonObj.getInt("cnt")
                 val message = jsonObj.getString("message")
-                val list = arrayListOf<DailyWeather>()
+                val city = jsonObj?.getJSONObject("city")?.getString("name")
+                val list = arrayListOf<ForeCastWeather>()
+
                 val jsonArray: JSONArray = jsonObj.getJSONArray("list")
 
                 for (i in (0 until jsonArray.length())) {
 
                     val jsonObj = jsonArray.getJSONObject(i)
-                    val date = jsonObj.getLong("dt")?.toDate()
+                    val timestamp = jsonObj.getLong("dt")
+                    val date = timestamp?.toDate()
                     val temp = jsonObj.getJSONObject("main")?.getDouble("temp") ?: 0.0
+                    val minTemp = jsonObj.getJSONObject("main")?.getDouble("temp_min") ?: 0.0
+                    val maxTemp = jsonObj.getJSONObject("main")?.getDouble("temp_max") ?: 0.0
                     val weatherStr = jsonObj.getJSONArray("weather").getJSONObject(0)?.getString("main") ?: ""
                     val weatherDes = jsonObj.getJSONArray("weather").getJSONObject(0)?.getString("description") ?: ""
 
-                    val dailyWeather = DailyWeather(
+                    val foreCast = ForeCastWeather(
                         date = date,
                         temp = temp,
+                        minTemp = minTemp,
+                        maxTemp = maxTemp,
                         weather = weatherStr,
-                        weatherDescription = weatherDes
+                        weatherDescription = weatherDes,
+                        time = timestamp?.toTime()
                     )
-
-                    list.add(dailyWeather)
+                    list.add(foreCast)
 
                 }
 
@@ -62,7 +70,8 @@ class WeatherDetails {
                     cod = cod,
                     cnt = cnt,
                     message = message,
-                    list = list
+                    list = list,
+                    city = city ?: "N/A"
                 )
                 onSuccess.invoke(weather)
             } catch (ex: JSONException) {

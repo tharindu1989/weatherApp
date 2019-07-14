@@ -8,5 +8,6 @@ data class Weather(
     val cod: Int,
     val message: String,
     val cnt: Int,
-    val list: ArrayList<DailyWeather>
+    val list: ArrayList<ForeCastWeather>,
+    val city : String
 )

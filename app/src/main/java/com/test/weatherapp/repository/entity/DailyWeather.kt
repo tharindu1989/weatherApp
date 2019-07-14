@@ -5,8 +5,9 @@ package com.test.weatherapp.repository.entity
  *
  */
 data class DailyWeather(
-    val date : String,
-    val temp : Double,
-    val weather : String,
-    val weatherDescription : String?=null
+    var day: String? = null,
+    var startWeather: String? = null,
+    var endWeather: String? = null,
+    var minTemp: Double? = null,
+    var maxTemp: Double? = null
 )
