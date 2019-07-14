@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.test.espresso.idling.CountingIdlingResource
 import com.test.weatherapp.R
 import com.test.weatherapp.feature.BaseActivity
 import com.test.weatherapp.feature.dashboard.adapter.DashboardAdapter
@@ -20,6 +21,8 @@ class DashboardActivity : BaseActivity() {
     private var viewModel: DashboardViewModel? = null
     private var dashboardAdapter: DashboardAdapter? = null
     private var todayWeatherAdapter: TodayDataAdapter? = null
+
+    val countingIdlingResource: CountingIdlingResource = CountingIdlingResource("API_LOADING")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,12 +58,18 @@ class DashboardActivity : BaseActivity() {
     }
 
     private fun setObservers() {
-
+        countingIdlingResource.increment()
         viewModel?.weatherDetails?.observe(this, Observer {
             setData(it)
+            if (!countingIdlingResource.isIdleNow) {
+                countingIdlingResource.decrement()
+            }
         })
         viewModel?.error?.observe(this, Observer {
             showError(it)
+            if (!countingIdlingResource.isIdleNow) {
+                countingIdlingResource.decrement()
+            }
         })
     }
 
