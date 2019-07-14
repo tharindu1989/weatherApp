@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.test.weatherapp.feature.dashboard.viewholder.WeatherViewHolder
-import com.test.weatherapp.repository.entity.Weather
+import com.test.weatherapp.repository.entity.DailyWeather
 
 /**
  * Created By Tharindu on 7/12/2019
@@ -12,7 +12,7 @@ import com.test.weatherapp.repository.entity.Weather
  */
 class DashboardAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
 
-    var itemList: ArrayList<Weather> = arrayListOf()
+    var itemList: ArrayList<DailyWeather> = arrayListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -27,5 +27,16 @@ class DashboardAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
         val data = itemList[position]
         holder.bindData(data)
 
+    }
+
+    /**
+     * refresh Adapter with new Data
+     * @param items : New Items
+     */
+    fun refreshData(items: ArrayList<DailyWeather>?) {
+        items?.let {
+            itemList = it
+            notifyDataSetChanged()
+        }
     }
 }
